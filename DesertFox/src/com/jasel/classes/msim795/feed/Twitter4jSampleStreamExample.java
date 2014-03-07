@@ -23,8 +23,8 @@ import com.twitter.hbc.httpclient.auth.OAuth1;
 import com.twitter.hbc.twitter4j.v3.Twitter4jStatusClient;
 import com.twitter.hbc.twitter4j.v3.handler.StatusStreamHandler;
 import com.twitter.hbc.twitter4j.v3.message.DisconnectMessage;
-
 import com.twitter.hbc.twitter4j.v3.message.StallWarningMessage;
+
 import twitter4j.StallWarning;
 import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;
@@ -37,65 +37,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class Twitter4jSampleStreamExample {
 
-	// A bare bones listener
-	private StatusListener statusListener = new StatusListener() {
-		@Override
-		public void onStatus(Status status) {
-			System.out.println("STATUS:  User: " + status.getUser());
-			System.out.println("         Text: " + status.getText());
-		}
-
-		@Override
-		public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {}
-
-		@Override
-		public void onTrackLimitationNotice(int limit) {}
-
-		@Override
-		public void onScrubGeo(long user, long upToStatus) {}
-
-		@Override
-		public void onStallWarning(StallWarning warning) {}
-
-		@Override
-		public void onException(Exception e) {}
-	};
-
-	
-	
-	// A bare bones StatusStreamHandler, which extends listener and gives some extra functionality
-	private StatusListener statusStreamHandler = new StatusStreamHandler() {
-		@Override
-		public void onStatus(Status status) {}
-
-		@Override
-		public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {}
-
-		@Override
-		public void onTrackLimitationNotice(int limit) {}
-
-		@Override
-		public void onScrubGeo(long user, long upToStatus) {}
-
-		@Override
-		public void onStallWarning(StallWarning warning) {}
-
-		@Override
-		public void onException(Exception e) {}
-
-		@Override
-		public void onDisconnectMessage(DisconnectMessage message) {}
-
-		@Override
-		public void onStallWarningMessage(StallWarningMessage warning) {}
-
-		@Override
-		public void onUnknownMessageType(String s) {}
-	};
-
-	
-	
 	public void oauth(String consumerKey, String consumerSecret, String token, String secret) throws InterruptedException {
+		CustomStatusListener csl1 = new CustomStatusListener();
+		CustomStatusStreamHandler cssh = new CustomStatusStreamHandler();
+		
 		// Create an appropriately sized blocking queue
 		BlockingQueue<String> queue = new LinkedBlockingQueue<String>(10000);
 
@@ -121,7 +66,11 @@ public class Twitter4jSampleStreamExample {
 
 		// Wrap our BasicClient with the twitter4j client
 		Twitter4jStatusClient t4jClient = new Twitter4jStatusClient(
-				client, queue, Lists.newArrayList(statusListener, statusStreamHandler), service);
+				client,
+				queue,
+				Lists.newArrayList(csl1, cssh),
+				service
+		);
 
 		// Establish a connection
 		t4jClient.connect();
