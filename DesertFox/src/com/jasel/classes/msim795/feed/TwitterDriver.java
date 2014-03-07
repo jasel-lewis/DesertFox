@@ -35,12 +35,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class Twitter4jSampleStreamExample {
+public class TwitterDriver {
+	private CustomStatusListener csl1 = new CustomStatusListener();
+	private CustomStatusStreamHandler cssh = new CustomStatusStreamHandler();
 
-	public void oauth(String consumerKey, String consumerSecret, String token, String secret) throws InterruptedException {
-		CustomStatusListener csl1 = new CustomStatusListener();
-		CustomStatusStreamHandler cssh = new CustomStatusStreamHandler();
-		
+	
+	public void connect(String consumerKey, String consumerSecret, String token, String secret) throws InterruptedException {
 		// Create an appropriately sized blocking queue
 		BlockingQueue<String> queue = new LinkedBlockingQueue<String>(10000);
 
@@ -49,7 +49,6 @@ public class Twitter4jSampleStreamExample {
 		StatusesSampleEndpoint endpoint = new StatusesSampleEndpoint();
 
 		Authentication auth = new OAuth1(consumerKey, consumerSecret, token, secret);
-		// Authentication auth = new BasicAuth(username, password);
 
 		// Create a new BasicClient. By default gzip is enabled.
 		BasicClient client = new ClientBuilder()
@@ -74,6 +73,7 @@ public class Twitter4jSampleStreamExample {
 
 		// Establish a connection
 		t4jClient.connect();
+		
 		for (int threads = 0; threads < numProcessingThreads; threads++) {
 			// This must be called once per processing thread
 			t4jClient.process();

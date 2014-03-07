@@ -58,10 +58,10 @@ public class Streamer {
 			}
 		}
 		
-		Twitter4jSampleStreamExample example = new Twitter4jSampleStreamExample();
+		TwitterDriver example = new TwitterDriver();
 		
 		try {
-			example.oauth(
+			example.connect(
 					props.getProperty("consumerKey"),
 					props.getProperty("consumerSecret"),
 					props.getProperty("accessToken"),
