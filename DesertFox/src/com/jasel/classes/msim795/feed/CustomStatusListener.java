@@ -13,6 +13,7 @@ import twitter4j.StatusListener;
  *
  */
 public class CustomStatusListener implements StatusListener {
+	
 	/* (non-Javadoc)
 	 * @see twitter4j.StatusListener#onStatus(twitter4j.Status)
 	 */

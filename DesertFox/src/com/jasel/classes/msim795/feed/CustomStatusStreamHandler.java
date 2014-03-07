@@ -7,8 +7,9 @@ import twitter4j.StallWarning;
 import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;
 
-import com.twitter.hbc.twitter4j.handler.StatusStreamHandler;
-import com.twitter.hbc.twitter4j.message.DisconnectMessage;
+import com.twitter.hbc.twitter4j.v3.handler.StatusStreamHandler;
+import com.twitter.hbc.twitter4j.v3.message.DisconnectMessage;
+import com.twitter.hbc.twitter4j.v3.message.StallWarningMessage;
 
 /**
  * @author jasel
@@ -65,7 +66,7 @@ public class CustomStatusStreamHandler implements StatusStreamHandler {
 	
 	
 	/* (non-Javadoc)
-	 * @see com.twitter.hbc.twitter4j.handler.StatusStreamHandler#onDisconnectMessage(com.twitter.hbc.twitter4j.message.DisconnectMessage)
+	 * @see com.twitter.hbc.twitter4j.v3.handler.StatusStreamHandler#onDisconnectMessage(com.twitter.hbc.twitter4j.message.DisconnectMessage)
 	 */
 	@Override
 	public void onDisconnectMessage(DisconnectMessage message) {}
@@ -73,8 +74,16 @@ public class CustomStatusStreamHandler implements StatusStreamHandler {
 	
 	
 	/* (non-Javadoc)
-	 * @see com.twitter.hbc.twitter4j.handler.StatusStreamHandler#onUnknownMessageType(java.lang.String)
+	 * @see com.twitter.hbc.twitter4j.v3.handler.StatusStreamHandler#onUnknownMessageType(java.lang.String)
 	 */
 	@Override
 	public void onUnknownMessageType(String msg) {}
+
+
+
+	/* (non-Javadoc)
+	 * @see com.twitter.hbc.twitter4j.v3.handler.StatusStreamHandler#onUnknownMessageType(java.lang.String)
+	 */
+	@Override
+	public void onStallWarningMessage(StallWarningMessage warning) {}
 }
