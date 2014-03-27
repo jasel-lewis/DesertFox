@@ -13,7 +13,7 @@ import java.util.Properties;
  * @author jasel
  *
  */
-public class Streamer {
+public class TweetHarvester {
 
 	/**
 	 * @param args
@@ -25,7 +25,7 @@ public class Streamer {
 		InputStream iStream = null;
 		
 		try {
-			iStream = Streamer.class.getResourceAsStream(defaultConfigFilename);
+			iStream = TweetHarvester.class.getResourceAsStream(defaultConfigFilename);
 			
 			if (iStream == null) {
 				System.err.println("Unable to load the default configuration properties");
