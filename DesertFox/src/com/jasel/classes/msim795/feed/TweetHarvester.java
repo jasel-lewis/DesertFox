@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import com.jasel.classes.msim795.exception.MissingAuthParameterException;
+
 /**
  * @author jasel
  *
@@ -28,7 +30,8 @@ public class TweetHarvester {
 			iStream = TweetHarvester.class.getResourceAsStream(defaultConfigFilename);
 			
 			if (iStream == null) {
-				System.err.println("Unable to load the default configuration properties");
+				System.err.println("Unable to load the default configuration properties.  Cannot continue.");
+				System.exit(1);
 			} else {
 				props.load(iStream);
 			}
@@ -58,17 +61,23 @@ public class TweetHarvester {
 			}
 		}
 		
-		TwitterDriver example = new TwitterDriver();
+		TwitterConnector connector = new TwitterConnector();
 		
 		try {
-			example.connect(
+			connector.connect(
 					props.getProperty("consumerKey"),
 					props.getProperty("consumerSecret"),
 					props.getProperty("accessToken"),
 					props.getProperty("accessTokenSecret")
 			);
+			
+			Thread.sleep(30000);
+			
+			connector.close();
 		} catch (InterruptedException ie) {
 			ie.printStackTrace();
+		} catch (MissingAuthParameterException mape) {
+			mape.printStackTrace();
 		}
 	}
 }
