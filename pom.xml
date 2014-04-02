@@ -10,22 +10,17 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.1</version>
         <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
+          <source>1.7</source>
+          <target>1.7</target>
         </configuration>
       </plugin>
     </plugins>
   </build>
   <dependencies>
   	<dependency>
-  		<groupId>com.twitter</groupId>
-  		<artifactId>hbc-twitter4j</artifactId>
-  		<version>1.4.2</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>com.twitter</groupId>
-  		<artifactId>hbc-twitter4j-v3</artifactId>
-  		<version>1.4.2</version>
-  	</dependency>
+      <groupId>com.twitter</groupId>
+      <artifactId>hbc-twitter4j</artifactId>
+      <version>2.0.0</version>
+    </dependency>
   </dependencies>
 </project>
