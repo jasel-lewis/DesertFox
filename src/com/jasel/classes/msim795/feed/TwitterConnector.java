@@ -1,6 +1,5 @@
 package com.jasel.classes.msim795.feed;
 
-import com.google.common.collect.Lists;
 import com.jasel.classes.msim795.exception.MissingAuthParameterException;
 import com.twitter.hbc.ClientBuilder;
 import com.twitter.hbc.core.Constants;
@@ -13,10 +12,7 @@ import com.twitter.hbc.core.processor.StringDelimitedProcessor;
 import com.twitter.hbc.httpclient.auth.Authentication;
 import com.twitter.hbc.httpclient.auth.OAuth1;
 import com.twitter.hbc.twitter4j.Twitter4jStatusClient;
-import com.twitter.hbc.twitter4j.handler.StatusStreamHandler;
-import com.twitter.hbc.twitter4j.message.DisconnectMessage;
-import com.twitter.hbc.twitter4j.message.StallWarningMessage;
-
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
@@ -24,13 +20,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import twitter4j.StallWarning;
-import twitter4j.Status;
-import twitter4j.StatusDeletionNotice;
 import twitter4j.StatusListener;
 
 public class TwitterConnector {
-	private CustomStatusListener csl = new CustomStatusListener();
 	private CustomStatusStreamHandler cssh = new CustomStatusStreamHandler();
 	Twitter4jStatusClient t4jClient;
 	private int numProcessingThreads = 4;
@@ -38,11 +30,13 @@ public class TwitterConnector {
 	public void connect(Properties props) throws InterruptedException,
 			MissingAuthParameterException {
 		
-		BlockingQueue<String> msgQueue = new LinkedBlockingQueue<String>(100000);
+		BlockingQueue<String> msgQueue = new LinkedBlockingQueue<String>(10000);
 		BlockingQueue<Event> evtQueue = new LinkedBlockingQueue<Event>(1000);
 		//List<? extends StatusListener> listeners = (List<? extends StatusListener>) Lists.newArrayList(csl, cssh);
 		//List<? extends StatusListener> listeners = (List<? extends StatusListener>) Lists.newArrayList(csl);
-		List<? extends StatusListener> listeners = Lists.newArrayList();
+		//List<? extends StatusListener> statusListeners = Lists.newArrayList();
+		//List<? extends StatusListener> listeners = new ArrayList<? extends StatusListener>();
+		List<StatusListener> statusListeners = new ArrayList<StatusListener>();
 		ExecutorService executorService;
 		Hosts hosts;
 		StreamingEndpoint endpoint;
@@ -75,13 +69,13 @@ public class TwitterConnector {
 		// parsing the incoming messages and calling the listeners on each message
 		executorService = Executors.newFixedThreadPool(numProcessingThreads);
 		
-((List<? extends StatusListener>)listeners).append(csl);
+		statusListeners.add(cssh);
 
 		// Build the Client and wrap it within a Twitter4jClient
 		t4jClient = new Twitter4jStatusClient(
 				builder.build(),
 				msgQueue,
-				listeners,
+				statusListeners,
 				executorService
 		);
 

@@ -89,5 +89,7 @@ public class TweetHarvester {
 		} catch (MissingAuthParameterException mape) {
 			mape.printStackTrace();
 		}
+		
+		System.exit(0);
 	}
 }
