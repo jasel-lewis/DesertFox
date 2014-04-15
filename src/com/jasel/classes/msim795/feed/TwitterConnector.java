@@ -5,13 +5,15 @@ import com.twitter.hbc.ClientBuilder;
 import com.twitter.hbc.core.Constants;
 import com.twitter.hbc.core.Hosts;
 import com.twitter.hbc.core.HttpHosts;
-import com.twitter.hbc.core.endpoint.StatusesFirehoseEndpoint;
+//import com.twitter.hbc.core.endpoint.StatusesFirehoseEndpoint;
+import com.twitter.hbc.core.endpoint.StatusesSampleEndpoint;
 import com.twitter.hbc.core.endpoint.StreamingEndpoint;
 import com.twitter.hbc.core.event.Event;
 import com.twitter.hbc.core.processor.StringDelimitedProcessor;
 import com.twitter.hbc.httpclient.auth.Authentication;
 import com.twitter.hbc.httpclient.auth.OAuth1;
 import com.twitter.hbc.twitter4j.Twitter4jStatusClient;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -23,7 +25,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import twitter4j.StatusListener;
 
 public class TwitterConnector {
-	private CustomStatusStreamHandler cssh = new CustomStatusStreamHandler();
+	private CustomStatusListener csl = new CustomStatusListener();
+	//private CustomStatusStreamHandler cssh = new CustomStatusStreamHandler();
 	Twitter4jStatusClient t4jClient;
 	private int numProcessingThreads = 4;
 
@@ -53,12 +56,14 @@ public class TwitterConnector {
 
 		// Define the host to connect to, the endpoint and the authentication
 		hosts = new HttpHosts(Constants.STREAM_HOST);
-		endpoint = new StatusesFirehoseEndpoint();
+		//endpoint = new StatusesFirehoseEndpoint();
+		endpoint = new StatusesSampleEndpoint();
 		auth = new OAuth1(apiKey, apiSecret, token, secret);
 		
 		// Build a client
 		builder = new ClientBuilder()
-				.name("Client-01")
+				//.name("Hosebird-Client-01")
+				.name("Sample-Client-01")
 				.hosts(hosts)
 				.endpoint(endpoint)
 				.authentication(auth)
@@ -69,7 +74,8 @@ public class TwitterConnector {
 		// parsing the incoming messages and calling the listeners on each message
 		executorService = Executors.newFixedThreadPool(numProcessingThreads);
 		
-		statusListeners.add(cssh);
+		//statusListeners.add(cssh);
+		statusListeners.add(csl);
 
 		// Build the Client and wrap it within a Twitter4jClient
 		t4jClient = new Twitter4jStatusClient(
@@ -81,9 +87,12 @@ public class TwitterConnector {
 
 		// Establish a connection
 		t4jClient.connect();
+		
+		System.out.println("t4jClient has been connected");
 
 		// t4jClient.process() must be called once per processing thread
 		for (int threads = 0; threads < numProcessingThreads; threads++) {
+			System.out.println("launched process thread #" + threads);
 			t4jClient.process();
 		}
 	}
@@ -95,6 +104,6 @@ public class TwitterConnector {
 	 */
 	public void close() {
 		t4jClient.stop();
-		System.err.println("t4jClient has been stopped");
+		System.out.println("t4jClient has been stopped");
 	}
 }

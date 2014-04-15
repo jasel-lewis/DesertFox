@@ -38,8 +38,7 @@ public class TweetHarvester {
 			);
 
 			if (iStream == null) {
-				System.err
-						.println("Unable to load the default configuration properties.  Cannot continue.");
+				System.err.println("Unable to load the default configuration properties.  Cannot continue.");
 				System.exit(1);
 			} else {
 				props.load(iStream);
@@ -64,14 +63,12 @@ public class TweetHarvester {
 			try {
 				props.load(new FileInputStream(customConfigFilename));
 			} catch (FileNotFoundException fnfe) {
-				System.err
-						.println("Could not locate the user-defined configuration file: "
-								+ customConfigFilename);
+				System.err.println("Could not locate the user-defined configuration file: "
+					+ customConfigFilename);
 				fnfe.printStackTrace();
 			} catch (IOException ioe) {
-				System.err
-						.println("Could not read from the user-defined configuration file: "
-								+ customConfigFilename);
+				System.err.println("Could not read from the user-defined configuration file: "
+					+ customConfigFilename);
 				ioe.printStackTrace();
 			}
 		}
@@ -81,7 +78,9 @@ public class TweetHarvester {
 		try {
 			connector.connect(props);
 
-			Thread.sleep(1000);
+			System.out.println("letting the client run...");
+			Thread.sleep(3000);
+			System.out.println("done running");
 
 			connector.close();
 		} catch (InterruptedException ie) {
