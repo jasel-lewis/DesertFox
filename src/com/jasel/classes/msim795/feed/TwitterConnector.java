@@ -14,6 +14,7 @@ import com.twitter.hbc.httpclient.auth.Authentication;
 import com.twitter.hbc.httpclient.auth.OAuth1;
 import com.twitter.hbc.twitter4j.Twitter4jStatusClient;
 
+import java.io.BufferedWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -30,8 +31,8 @@ public class TwitterConnector {
 	private int numProcessingThreads = 4;
 	
 	
-	public TwitterConnector(String filename) {
-		csl = new CustomStatusListener(filename);
+	public TwitterConnector(BufferedWriter bw) {
+		csl = new CustomStatusListener(bw);
 	}
 	
 	

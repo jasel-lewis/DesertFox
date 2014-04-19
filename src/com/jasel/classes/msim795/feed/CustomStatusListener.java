@@ -4,9 +4,8 @@
 package com.jasel.classes.msim795.feed;
 
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Locale;
 
 import twitter4j.StallWarning;
 import twitter4j.Status;
@@ -21,17 +20,8 @@ public class CustomStatusListener implements StatusListener  {
 	private BufferedWriter bw;
 	
 	
-	public CustomStatusListener(String filename) {
-		try {
-			bw = new BufferedWriter(new FileWriter(new File(filename)));
-		} catch (IOException ioe) {
-			System.err.println("Cannot open " + filename + " for writing");
-			ioe.printStackTrace();
-			System.exit(10);
-		} catch (NullPointerException npe) {
-			System.err.println("Filename passed for output file is NULL");
-			System.exit(11);
-		}
+	public CustomStatusListener(BufferedWriter bw) {
+		this.bw = bw;
 	}
 	
 	
@@ -43,7 +33,11 @@ public class CustomStatusListener implements StatusListener  {
 				.replaceAll("#\\S+",  " ")		// Remove all hashtags
 				.replaceAll("RT\\s", "")		// Remove all re-tweet notifications
 				.replaceAll("http\\S+", " ")	// Remove all links
-				.replaceAll("\\p{Punct}", " "); // Remove all punctuation
+				.replaceAll("\\p{Punct}", " ")	// Remove all punctuation
+				.replaceAll("[^ -~]", "")		// Strip non-printable and control characters
+				.toUpperCase(Locale.US);		// Hopefully get rid of non-standard characters
+												// and make searching easier in the C portion
+												// of the code
 		
 		writeLine(editedText);
 	}

@@ -4,8 +4,11 @@
  */
 package com.jasel.classes.msim795;
 
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -25,11 +28,13 @@ public class TweetHarvester {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		BufferedWriter bw;
 		String packageName = TweetHarvester.class.getPackage().getName();
 		String defaultConfigFilename = "default.properties";
 		String customConfigFilename = "";
 		Properties props = new Properties();
 		InputStream iStream = null;
+		int exitVal = 0;
 
 		// Convert dots to slashes
 		packageName = packageName.replaceAll("\\.", "/");
@@ -74,23 +79,34 @@ public class TweetHarvester {
 				ioe.printStackTrace();
 			}
 		}
-
-		TwitterConnector connector = new TwitterConnector(FILENAME);
-
+		
 		try {
+			bw = new BufferedWriter(new FileWriter(new File(FILENAME)));
+		
+			TwitterConnector connector = new TwitterConnector(bw);
+
 			connector.connect(props);
 
 			System.out.println("...letting the client run for " + runTime/1000 + " seconds");
 			Thread.sleep(runTime);
 			System.out.println("done running");
+			System.out.flush();
 
 			connector.close();
+			bw.close();
+		} catch (IOException ioe) {
+			System.err.println("Cannot open " + FILENAME + " for writing");
+			ioe.printStackTrace();
+			exitVal = 10;
+		} catch (NullPointerException npe) {
+			System.err.println("Filename passed for output file is NULL");
+			exitVal = 11;
 		} catch (InterruptedException ie) {
 			ie.printStackTrace();
 		} catch (MissingAuthParameterException mape) {
 			mape.printStackTrace();
 		}
 		
-		System.exit(0);
+		System.exit(exitVal);
 	}
 }
