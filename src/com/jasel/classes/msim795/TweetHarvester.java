@@ -18,6 +18,7 @@ import com.jasel.classes.msim795.feed.TwitterConnector;
  * 
  */
 public class TweetHarvester {
+	private static int runTime = 60000;  // Time in milliseconds to let the client run
 
 	/**
 	 * @param args
@@ -78,8 +79,8 @@ public class TweetHarvester {
 		try {
 			connector.connect(props);
 
-			System.out.println("letting the client run...");
-			Thread.sleep(3000);
+			System.out.println("...letting the client run for " + runTime + " seconds");
+			Thread.sleep(runTime);
 			System.out.println("done running");
 
 			connector.close();
