@@ -80,7 +80,7 @@ public class TweetHarvester {
 		try {
 			connector.connect(props);
 
-			System.out.println("...letting the client run for " + runTime + " seconds");
+			System.out.println("...letting the client run for " + runTime/1000 + " seconds");
 			Thread.sleep(runTime);
 			System.out.println("done running");
 
