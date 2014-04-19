@@ -19,6 +19,7 @@ import com.jasel.classes.msim795.feed.TwitterConnector;
  */
 public class TweetHarvester {
 	private static int runTime = 60000;  // Time in milliseconds to let the client run
+	private static String FILENAME = "tweetTexts.preprocessed";
 
 	/**
 	 * @param args
@@ -74,7 +75,7 @@ public class TweetHarvester {
 			}
 		}
 
-		TwitterConnector connector = new TwitterConnector();
+		TwitterConnector connector = new TwitterConnector(FILENAME);
 
 		try {
 			connector.connect(props);

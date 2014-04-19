@@ -18,14 +18,7 @@ import twitter4j.StatusListener;
  *
  */
 public class CustomStatusListener implements StatusListener  {
-	private static String FILENAME = "tweetTexts.preprocessed";
 	private BufferedWriter bw;
-	
-	
-	public CustomStatusListener() {
-		this(FILENAME);
-	}
-	
 	
 	
 	public CustomStatusListener(String filename) {

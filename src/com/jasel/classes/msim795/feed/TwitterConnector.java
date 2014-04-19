@@ -25,7 +25,14 @@ import java.util.concurrent.LinkedBlockingQueue;
 import twitter4j.StatusListener;
 
 public class TwitterConnector {
-	private CustomStatusListener csl = new CustomStatusListener();
+	private static String filename;
+	
+	public TwitterConnector(String filename) {
+		TwitterConnector.filename = filename;
+	}
+	
+	
+	private CustomStatusListener csl = new CustomStatusListener(filename);
 	//private CustomStatusStreamHandler cssh = new CustomStatusStreamHandler();
 	Twitter4jStatusClient t4jClient;
 	private int numProcessingThreads = 4;
