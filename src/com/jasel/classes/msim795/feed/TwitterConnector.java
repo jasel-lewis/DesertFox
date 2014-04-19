@@ -25,27 +25,22 @@ import java.util.concurrent.LinkedBlockingQueue;
 import twitter4j.StatusListener;
 
 public class TwitterConnector {
-	private static String filename;
+	private CustomStatusListener csl;
+	private Twitter4jStatusClient t4jClient;
+	private int numProcessingThreads = 4;
+	
 	
 	public TwitterConnector(String filename) {
-		TwitterConnector.filename = filename;
+		csl = new CustomStatusListener(filename);
 	}
 	
 	
-	private CustomStatusListener csl = new CustomStatusListener(filename);
-	//private CustomStatusStreamHandler cssh = new CustomStatusStreamHandler();
-	Twitter4jStatusClient t4jClient;
-	private int numProcessingThreads = 4;
 
 	public void connect(Properties props) throws InterruptedException,
 			MissingAuthParameterException {
 		
 		BlockingQueue<String> msgQueue = new LinkedBlockingQueue<String>(10000);
 		BlockingQueue<Event> evtQueue = new LinkedBlockingQueue<Event>(1000);
-		//List<? extends StatusListener> listeners = (List<? extends StatusListener>) Lists.newArrayList(csl, cssh);
-		//List<? extends StatusListener> listeners = (List<? extends StatusListener>) Lists.newArrayList(csl);
-		//List<? extends StatusListener> statusListeners = Lists.newArrayList();
-		//List<? extends StatusListener> listeners = new ArrayList<? extends StatusListener>();
 		List<StatusListener> statusListeners = new ArrayList<StatusListener>();
 		ExecutorService executorService;
 		Hosts hosts;
@@ -81,7 +76,6 @@ public class TwitterConnector {
 		// parsing the incoming messages and calling the listeners on each message
 		executorService = Executors.newFixedThreadPool(numProcessingThreads);
 		
-		//statusListeners.add(cssh);
 		statusListeners.add(csl);
 
 		// Build the Client and wrap it within a Twitter4jClient

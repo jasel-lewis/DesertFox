@@ -24,10 +24,13 @@ public class CustomStatusListener implements StatusListener  {
 	public CustomStatusListener(String filename) {
 		try {
 			bw = new BufferedWriter(new FileWriter(new File(filename)));
-		} catch (IOException e) {
+		} catch (IOException ioe) {
 			System.err.println("Cannot open " + filename + " for writing");
-			e.printStackTrace();
+			ioe.printStackTrace();
 			System.exit(10);
+		} catch (NullPointerException npe) {
+			System.err.println("Filename passed for output file is NULL");
+			System.exit(11);
 		}
 	}
 	
